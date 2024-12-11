@@ -15,6 +15,7 @@ class Ward:
         self.capacity = capacity
         self.patients = []
         self.doctors = []
+        self.rooms = []
 
     def add_patient(self, patient: patient.Patient):
         """
@@ -28,6 +29,7 @@ class Ward:
         """
         if len(self.patients) < self.capacity:
             self.patients.append(patient)
+            self.capacity -= 1
             return True
         return False
 
@@ -40,7 +42,7 @@ class Ward:
         """
         self.doctors.append(doctor)
 
-    def remove_patient(self, patient):
+    def remove_patient(self, patient: patient.Patient):
         """
         Removes a patient from the ward.
 
@@ -48,3 +50,13 @@ class Ward:
             patient (patient.Patient): The patient to remove.
         """
         self.patients.remove(patient)
+        self.capacity += 1
+
+    def treatment(self, patient: patient.Patient, doctors: list[Doctors.Doctor]):
+        """
+        Treats a patient with a doctor.
+
+        Args:
+            patient (patient.Patient): The patient to treat.
+            doctors (Doctors.Doctor): The doctors to treat the patient with.
+        """
