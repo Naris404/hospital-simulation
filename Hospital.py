@@ -1,4 +1,5 @@
 import Wards
+import Ambulance
 
 
 class Hospital:
