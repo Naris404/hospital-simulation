@@ -1,4 +1,4 @@
-import patient
+import Patients
 import Doctors
 
 
@@ -17,12 +17,12 @@ class Ward:
         self.doctors = []
         self.rooms = []
 
-    def add_patient(self, patient: patient.Patient):
+    def add_patient(self, patient: Patients.Patient):
         """
         Adds a patient to the ward.
 
         Args:
-            patient (patient.Patient): The patient to add.
+            patient (Patients.Patient): The patient to add.
 
         Returns:
             bool: True if the patient was added, False if the ward is full.
@@ -42,21 +42,21 @@ class Ward:
         """
         self.doctors.append(doctor)
 
-    def remove_patient(self, patient: patient.Patient):
+    def remove_patient(self, patient: Patients.Patient):
         """
         Removes a patient from the ward.
 
         Args:
-            patient (patient.Patient): The patient to remove.
+            patient (Patients.Patient): The patient to remove.
         """
         self.patients.remove(patient)
         self.capacity += 1
 
-    def treatment(self, patient: patient.Patient, doctors: list[Doctors.Doctor]):
+    def treatment(self, patient: Patients.Patient, doctors: list[Doctors.Doctor]):
         """
         Treats a patient with a doctor.
 
         Args:
-            patient (patient.Patient): The patient to treat.
+            patient (Patients.Patient): The patient to treat.
             doctors (Doctors.Doctor): The doctors to treat the patient with.
         """

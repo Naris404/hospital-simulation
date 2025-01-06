@@ -1,11 +1,13 @@
 import random
+from RandomGenerators import Age_Generator
 from medical_data import DISEASES
-
+import uuid
 
 class Patient:
     def __init__(self, age, gender, disease=None, diagnosis_result=None, hospital_days=0, survival_prob=1.0):
-        self.age = age
-        self.gender = gender
+        self._id = uuid.uuid4()
+        self._age = age
+        self._gender = gender
         self.disease = disease  # Słownik szczegółów choroby
         self.hospital_days = hospital_days
         self.survival_prob = survival_prob
@@ -36,5 +38,32 @@ class Patient:
             if self.disease else "None"
         )
         return (
-            f"Age: {self.age}, Gender: {self.gender}, Disease: {disease_info}, Diagnosis Result: {self.diagnosis_result}"
+            f"Age: {self._age}, Gender: {self._gender}, Disease: {disease_info}, Diagnosis Result: {self.diagnosis_result}"
         )
+
+class Patients_Queue:
+    def __init__(self):
+        """
+        Patients_Queue class is responsible for managing a queue of patients.
+
+        Attributes:
+            queue (list): A list of Patient objects
+        """
+        self.queue = []
+
+    def add_patient(self, patient = None):
+        if patient is None:
+            patient = Patient(Age_Generator(), random.choice(["male", "female"]))
+        self.queue.append(patient)
+        self.queue[-1].assign_random_disease()
+
+    def pop_patient(self):
+        return self.queue.pop(0)
+
+    def remove_patient(self, patient):
+        self.queue.remove(patient)
+
+    def print_queue(self):
+        for patient in self.queue:
+            print(patient.__str__())
+        print('\n', "-" * 125, '\n', sep='')

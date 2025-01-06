@@ -48,3 +48,5 @@ DISEASES = {
         "probability": 0.1  # 10%
     }
 }
+
+DEPARTMENTS = ["Cardiology", "Neurology", "Orthopedics"]

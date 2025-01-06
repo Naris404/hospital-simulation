@@ -1,5 +1,6 @@
 from random import uniform
 from numpy import argmin
+import uuid
 
 
 class Ambulance:
@@ -7,14 +8,14 @@ class Ambulance:
         """
         Initializes an Ambulance instance with a status, location and identification number.
         """
-        self.id = id
+        self._id = uuid.uuid4()
         self.status = status
         self.location = location
 
     def __repr__(self):
         return f"""
         Ambulance info
-        id: {self.id}
+        id: {self._id}
         status: {self.status}
         location: {self.location}
         """

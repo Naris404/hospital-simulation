@@ -1,6 +1,11 @@
+import random
+
+import Doctors
 import Wards
-import patient
-from medical_data import DISEASES
+import Patients
+import medical_data
+from Doctors import Doctor
+from medical_data import DISEASES, DEPARTMENTS
 import Ambulance
 
 
@@ -9,7 +14,7 @@ class Hospital:
         """
         Initializes a Hospital instance with an empty list of wards.
         """
-        self.wards = []  # Lista wszystkich oddziałów w szpitalu
+        self.wards = []
 
     def add_ward(self, ward: Wards.Ward):
         """
@@ -19,12 +24,12 @@ class Hospital:
         """
         self.wards.append(ward)
 
-    def assign_patient_to_ward(self, patient: patient.Patient):
+    def assign_patient_to_ward(self, patient: Patients.Patient):
         """
         Assign a patient to the correct ward based on their diagnosed disease.
 
         Args:
-            patient (patient.Patient): The patient to be assigned.
+            patient (Patients.Patient): The patient to be assigned.
         """
         # Korzystamy z diagnozy lekarza
         disease = patient.diagnosis_result['name']  # Choroba zdiagnozowana przez lekarza
@@ -46,3 +51,16 @@ class Hospital:
         else:
             print(f"Error: No ward found for disease {disease}.")
             return False
+
+
+    def init_hospital(self):
+
+        # Adding wards
+        for department in medical_data.DEPARTMENTS:
+            self.add_ward(ward=Wards.Ward(speciality=department, capacity=random.randint(30, 50)))
+
+        # Adding doctors
+        for ward in self.wards:
+            for _ in range(random.randint(10,20)):
+                ward.add_doctor(Doctors.Doctor(ward.speciality, 8))
+
