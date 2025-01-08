@@ -67,3 +67,10 @@ class Patients_Queue:
         for patient in self.queue:
             print(patient.__str__())
         print('\n', "-" * 125, '\n', sep='')
+
+    def fill_queue(self, n):
+        for _ in range(n):
+            self.add_patient()
+
+    def sort(self):
+        self.queue.sort(key=lambda x: x.hospital_days)                      #change to coming time

@@ -15,6 +15,7 @@ class Hospital:
         Initializes a Hospital instance with an empty list of wards.
         """
         self.wards = []
+        self.doctors = []
 
     def add_ward(self, ward: Wards.Ward):
         """
@@ -52,7 +53,6 @@ class Hospital:
             print(f"Error: No ward found for disease {disease}.")
             return False
 
-
     def init_hospital(self):
 
         # Adding wards
@@ -61,6 +61,6 @@ class Hospital:
 
         # Adding doctors
         for ward in self.wards:
-            for _ in range(random.randint(10,20)):
+            for _ in range(random.randint(10, 20)):
                 ward.add_doctor(Doctors.Doctor(ward.speciality, 8))
-
+                self.doctors.append(ward.doctors[-1])
