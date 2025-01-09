@@ -27,8 +27,8 @@ if __name__ == '__main__':
     waiting_patients = []
 
     # Setting time to time of coming first patient
-    time = queue.queue[0].hospital_days #change to coming time
-    time_events.append([queue.queue[0].coming_time, waiting_patients.append, (queue.pop_patient())])
+    time = queue.queue[0].arrival_time
+    time_events.append([queue.queue[0].arrival_time, waiting_patients.append, (queue.pop_patient())])
     status_events.append([random.choice(hospital.doctors).diagnose_patient, (waiting_patients[0], DISEASES)])
 
 
@@ -53,8 +53,8 @@ if __name__ == '__main__':
                     break
 
         # Check queue
-        if queue.queue[0].coming_time <= time_events[0][0] and queue.queue[0].coming_time >= current_time:
-            time_events.append([queue.queue[0].coming_time, waiting_patients.append, (queue.pop_patient())])
+        if queue.queue[0].arrival_time <= time_events[0][0] and queue.queue[0].arrival_time >= current_time:
+            time_events.append([queue.queue[0].arrival_time, waiting_patients.append, (queue.pop_patient())])
 
 
         for doctor in hospital.doctors:

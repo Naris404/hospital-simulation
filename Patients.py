@@ -94,7 +94,7 @@ class Patients_Queue:
             self.add_patient()
 
     def sort(self):
-        self.queue.sort(key=lambda x: x.hospital_days)
+        self.queue.sort(key=lambda x: x.arrival_time)
 
 
 # patients_queue = Patients_Queue(mean_interval=10, num_patients=5)
