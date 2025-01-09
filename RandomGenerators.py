@@ -35,3 +35,40 @@ def Age_Generator():
         return np.round(random_ages).astype(int)
 
     return generate_random_age_combined(age_groups, cdf)
+
+
+def generate_patient_arrival_times(mean_interval: float, num_patients: int):
+    import numpy as np
+    """
+    Generuje czasy przyjścia pacjentów do szpitala na podstawie rozkładu wykładniczego.
+
+    Args:
+        mean_interval (float): Średni czas (w minutach) między przyjściami pacjentów.
+        num_patients (int): Liczba pacjentów do wygenerowania.
+
+    Returns:
+        list: Lista czasów przyjścia (w minutach) od początku symulacji.
+    """
+    inter_arrival_times = np.random.exponential(mean_interval, num_patients)
+
+    arrival_times = np.cumsum(inter_arrival_times)
+
+    return arrival_times
+
+def generate_diagnosis_time(disease_name: str):
+    import numpy as np
+    from medical_data import DISEASES
+    """
+    Generuje czas diagnozy dla pacjenta na podstawie rozkładu wykładniczego.
+
+    Args:
+        mean_diagnosis_time (float): Średni czas diagnozy w minutach.
+
+    Returns:
+        float: Czas diagnozy w minutach.
+    """
+    mean_diagnosis_time = DISEASES[disease_name]['mean_diagnosis_time']
+    return np.random.exponential(mean_diagnosis_time)
+
+
+
