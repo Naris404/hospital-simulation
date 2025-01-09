@@ -52,7 +52,11 @@ class Ward:
         Args:
             doctor (Doctors.Doctor): The doctor to add.
         """
-        self.doctors.append(doctor)
+        try:
+            self.doctors.append(doctor)
+        except:
+            return False
+        return True
 
     def remove_patient(self, patient: Patients.Patient):
         """
@@ -61,8 +65,12 @@ class Ward:
         Args:
             patient (Patients.Patient): The patient to remove.
         """
-        self.patients.remove(patient)
-        self.capacity += 1
+        try:
+            self.patients.remove(patient)
+            self.capacity += 1
+        except:
+            return False
+        return True
 
     def treatment(self, patient: Patients.Patient, current_time):
         """

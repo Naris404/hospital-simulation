@@ -31,13 +31,21 @@ class Patient:
         return generate_diagnosis_time(self.disease['name'])
 
     def update_disease(self, disease_name, disease_details):
-        self.disease = {
-            "name": disease_name,
-            "details": disease_details
-        }
+        try:
+            self.disease = {
+                "name": disease_name,
+                "details": disease_details
+            }
+        except:
+            return False
+        return True
 
     def update_diagnosis_result(self, result):
-        self.diagnosis_result = result
+        try:
+            self.diagnosis_result = result
+        except:
+            return False
+        return True
 
     def __str__(self):
         disease_info = (
@@ -82,8 +90,12 @@ class Patients_Queue:
         return self.queue.pop(0)
 
     def remove_patient(self, patient):
-        self.queue.remove(patient)
-
+        try:
+            self.queue.remove(patient)
+        except:
+            return False
+        return True
+    
     def print_queue(self):
         for patient in self.queue:
             print(patient.__str__())

@@ -1,6 +1,6 @@
 import numpy as np
 import uuid
-
+from medical_data import DISEASES
 import Patients
 
 
@@ -9,7 +9,7 @@ class Doctor:
         """
         Initializes a Doctor instance with a specialization and worktime.
         """
-        self._id =uuid.uuid4()
+        self._id = uuid.uuid4()
         self.specialization = specialization
         self.worktime = worktime
         self.available = True
@@ -22,9 +22,22 @@ class Doctor:
 
     def treat(self, patient: Patients.Patient):
         self.occupied()
-        patient.survival_prob *= 2 # change of survivla probability
+        prob = DISEASES[patient.disease['name']]['probability']
+        # change of survival probability based on the correctness of diagnosis
+        try:
+            if patient.diagnosis_result == patient.disease['name']:
+                if patient.survival_prob * 1.2 >= 1:
+                    patient.survival_prob = 1
+                else:
+                    patient.survival_prob *= 1.2
+                # patient.survival_prob *= min(1, 1 + prob - np.random.normal(prob, 0.1))
+            else:
+                patient.survival_prob *= 0.8
+        except:
+            return False
+        return True
 
-    def diagnose_patient(self, patient, diseases, scale_correct=0.5, scale_incorrect=2.0):
+    def diagnose_patient(self, patient, diseases, scale_correct=0.8, scale_incorrect=2.0):
         """
         Diagnoses a patient using probabilities based on an exponential distribution.
 
