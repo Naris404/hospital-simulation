@@ -13,6 +13,7 @@ class Patient:
         self.survival_prob = survival_prob
         self.diagnosis_result = diagnosis_result
         self.arrival_time = arrival_time
+        self.doctors = [] # Doctors assigned to the patient (diagnosing, treating, etc.)
         if self.disease is None:
             self.assign_random_disease()
         self.diagnosis_time = self.generate_diagnosis_time()
@@ -46,6 +47,14 @@ class Patient:
         except:
             return False
         return True
+
+    def get_diagnosis(self, doctors):
+        for doctor in doctors:
+            if doctor.diagnose_patient(self, DISEASES):
+                self.doctors.append(doctor)
+                return True
+        return False
+
 
     def __str__(self):
         disease_info = (

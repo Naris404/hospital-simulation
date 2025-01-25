@@ -14,16 +14,16 @@ class Hospital:
         """
         Initializes a Hospital instance with an empty list of wards.
         """
-        self.wards = []
+        self.wards = {}
         self.doctors = []
 
-    def add_ward(self, ward: Wards.Ward):
+    def add_ward(self, department, ward: Wards.Ward):
         """
         Adds a Ward to the hospital.
         Args:
             ward (Wards.Ward): The Ward to be added.
         """
-        self.wards.append(ward)
+        self.wards[department] = ward
 
     def assign_patient_to_ward(self, patient: Patients.Patient):
         """
@@ -57,7 +57,7 @@ class Hospital:
 
         # Adding wards
         for department in medical_data.DEPARTMENTS:
-            self.add_ward(ward=Wards.Ward(speciality=department, capacity=random.randint(30, 50)))
+            self.add_ward(department, ward=Wards.Ward(speciality=department, capacity=random.randint(30, 50)))
 
         # Adding doctors
         for ward in self.wards:

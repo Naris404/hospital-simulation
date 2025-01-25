@@ -45,7 +45,7 @@ class Doctor:
             str: The diagnosed disease name.
         """
         if self.available:
-            self.available = False
+            self.occupied()
             true_disease = patient.disease["name"]
             department = patient.disease["details"]["department"]
 
