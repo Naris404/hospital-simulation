@@ -1,4 +1,7 @@
 import random
+
+from numpy.f2py.cfuncs import needs
+
 from RandomGenerators import Age_Generator, generate_diagnosis_time, generate_patient_arrival_times
 from medical_data import DISEASES
 import uuid
@@ -53,6 +56,27 @@ class Patient:
             if doctor.diagnose_patient(self, DISEASES):
                 self.doctors.append(doctor)
                 return True
+        return False
+
+    def get_treatment(self, ward):
+        if ward.rooms['available'] > 0 and self.diagnosis_result['details']['operation_time'] != None:
+            for doctor in ward.doctors:
+                if doctor.treat(self):
+                    self.doctors.append(doctor)
+                    ward.rooms['available'] -= 1
+                    prob = DISEASES[self.disease['name']]['probability']
+                    # change of survival probability based on the correctness of diagnosis
+                    if self.diagnosis_result == self.disease['name']:
+                        self.disease['details']['operation_time'] = None
+                        if self.survival_prob * 1.2 >= 1:
+                            self.survival_prob = 1
+                        else:
+                            self.survival_prob *= 1.2
+                        # patient.survival_prob *= min(1, 1 + prob - np.random.normal(prob, 0.1))
+                    else:
+                        self.survival_prob *= 0.8
+                    self.diagnosis_result['details']['operation_time'] = None
+                    return True
         return False
 
 

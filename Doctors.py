@@ -21,21 +21,10 @@ class Doctor:
         self.available = True
 
     def treat(self, patient: Patients.Patient):
-        self.occupied()
-        prob = DISEASES[patient.disease['name']]['probability']
-        # change of survival probability based on the correctness of diagnosis
-        try:
-            if patient.diagnosis_result == patient.disease['name']:
-                if patient.survival_prob * 1.2 >= 1:
-                    patient.survival_prob = 1
-                else:
-                    patient.survival_prob *= 1.2
-                # patient.survival_prob *= min(1, 1 + prob - np.random.normal(prob, 0.1))
-            else:
-                patient.survival_prob *= 0.8
-        except:
-            return False
-        return True
+        if self.available:
+            self.occupied()
+            return True
+        return False
 
     def diagnose_patient(self, patient, diseases, scale_correct=0.8, scale_incorrect=2.0):
         """
