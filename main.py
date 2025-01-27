@@ -8,17 +8,19 @@ def diagnose_patient_from_waiting_patients(waiting_patients, time_events, time):
         patient = waiting_patients.pop()
 
         # Appending time_events with end of diagnosis
-        time_events.append([time + patient.diagnosis_time, end_of_diagnosis, [hospital, patient]])
+        time_events.append([time + patient.diagnosis_time, end_of_diagnosis, [hospital, patient, time + patient.diagnosis_time]])
         return True
     return False
 
 
-def end_of_diagnosis(hospital, patient):
+def end_of_diagnosis(hospital, patient, time):
     hospital.wards[patient.diagnosis_result["department"]].capacity -= 1
     hospital.wards[patient.diagnosis_result["department"]].add_patient(patient)
     for doctor in patient.doctors:
         doctor.free()
     patient.doctors = []
+    if patient.disease['name'] == patient.diagnosis_result['name']:
+        patient.hospitalization_time = time + patient.diagnosis_result["details"]["hospitalization_time"]
 
 def treat_patient(wards, time, time_events):
     i = 0
@@ -37,6 +39,10 @@ def end_of_treatment(patient, ward):
         doctor.free()
     patient.doctors = []
 
+def discharge_patient(wards, time, time_events):
+    for department, ward in wards.items():
+        for patient in ward.patients:
+            if patient.discharge(ward.doctors):
 
 
 if __name__ == '__main__':

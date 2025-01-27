@@ -3,10 +3,7 @@ import random
 import Doctors
 import Wards
 import Patients
-import medical_data
-from Doctors import Doctor
 from medical_data import DISEASES, DEPARTMENTS
-import Ambulance
 
 
 class Hospital:
@@ -56,11 +53,11 @@ class Hospital:
     def init_hospital(self):
 
         # Adding wards
-        for department in medical_data.DEPARTMENTS:
+        for department in DEPARTMENTS:
             self.add_ward(department, ward=Wards.Ward(speciality=department, capacity=random.randint(30, 50)))
 
         # Adding doctors
-        for ward in self.wards:
+        for department, ward in self.wards.items():
             for _ in range(random.randint(10, 20)):
                 ward.add_doctor(Doctors.Doctor(ward.speciality, 8))
                 self.doctors.append(ward.doctors[-1])

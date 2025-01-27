@@ -1,7 +1,5 @@
 import random
 
-from numpy.f2py.cfuncs import needs
-
 from RandomGenerators import Age_Generator, generate_diagnosis_time, generate_patient_arrival_times
 from medical_data import DISEASES
 import uuid
@@ -20,6 +18,7 @@ class Patient:
         if self.disease is None:
             self.assign_random_disease()
         self.diagnosis_time = self.generate_diagnosis_time()
+        self.hospitalization_time = None
 
     def assign_random_disease(self):
         diseases = list(DISEASES.keys())
@@ -78,6 +77,9 @@ class Patient:
                     self.diagnosis_result['details']['operation_time'] = None
                     return True
         return False
+
+    def discharge(self, ward):
+        pass
 
 
     def __str__(self):
@@ -149,3 +151,4 @@ class Patients_Queue:
 # patients_queue.fill_queue(5)
 #
 # patients_queue.print_queue()
+

@@ -52,7 +52,7 @@ class Doctor:
 
             diagnosed_disease = np.random.choice(disease_names, p=probabilities)
 
-            patient.update_diagnosis_result(diagnosed_disease)
+            patient.update_diagnosis_result({"name": diagnosed_disease, "details": diseases[diagnosed_disease]})
             return True
         else:
             return False
