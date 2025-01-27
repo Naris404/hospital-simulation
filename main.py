@@ -8,47 +8,57 @@ def diagnose_patient_from_waiting_patients(waiting_patients, time_events, time):
         patient = waiting_patients.pop()
 
         # Appending time_events with end of diagnosis
-        time_events.append([time + patient.diagnosis_time, end_of_diagnosis, [hospital, patient, time + patient.diagnosis_time]])
+        time_events.append([time + patient.diagnosis_time, end_of_diagnosis, [hospital, patient]])
         return True
     return False
 
 
-def end_of_diagnosis(hospital, patient, time):
-    hospital.wards[patient.diagnosis_result["department"]].capacity -= 1
-    hospital.wards[patient.diagnosis_result["department"]].add_patient(patient)
+def end_of_diagnosis(hospital, patient):
+    hospital.wards[patient.diagnosis_result['details']["department"]].capacity -= 1
+    hospital.wards[patient.diagnosis_result['details']["department"]].add_patient(patient)
     for doctor in patient.doctors:
         doctor.free()
     patient.doctors = []
-    if patient.disease['name'] == patient.diagnosis_result['name']:
-        patient.hospitalization_time = time + patient.diagnosis_result["details"]["hospitalization_time"]
+
 
 def treat_patient(wards, time, time_events):
     i = 0
     for department, ward in wards.items():
         for patient in ward.patients:
+            if patient.diagnosis_result['details']['operation_time'] == None:
+                time_events.append([time + patient.diagnosis_result["details"]["hospitalization_time"], discharge_patient, [patient, ward]])
             if patient.get_treatment(ward.doctors):
-                time_events.append([time + patient.diagnosis_result['details']['operation_time'], end_of_treatment, [patient, ward]])
+                time_events.append([time + patient.diagnosis_result['details']['operation_time'], end_of_treatment,
+                                    [patient, ward, time_events, time]])
                 i += 1
     if i == 0:
         return False
     return True
 
-def end_of_treatment(patient, ward):
+
+def end_of_treatment(patient, ward, time_events, time):
     ward.rooms['available'] += 1
     for doctor in patient.doctors:
         doctor.free()
     patient.doctors = []
+    # if patient.disease['name'] == patient.diagnosis_result['name']:
+    #     patient.hospitalization_time = time + patient.diagnosis_result["details"]["hospitalization_time"]
+    #     time_events.append([patient.hospitalization_time, discharge_patient, [patient, ward]])
+    patient.hospitalization_time = time + patient.diagnosis_result["details"]["hospitalization_time"]
+    time_events.append([patient.hospitalization_time, discharge_patient, [patient, ward]])
 
-def discharge_patient(wards, time, time_events):
-    for department, ward in wards.items():
-        for patient in ward.patients:
-            if patient.discharge(ward.doctors):
+
+def discharge_patient(patient, ward):
+    patient.discharge(ward)
+    return patient
 
 
 if __name__ == '__main__':
-    status_events = ['diagnose_patient_from_waiting_patients(waiting_patients, time_events, time)', ]
+    status_events = ['diagnose_patient_from_waiting_patients(waiting_patients, time_events, time)',
+                     'treat_patient(hospital.wards, time, time_events)']
     time_events = []
     waiting_patients = []
+    discharged_patients = []
 
     # Creating a hospital
     hospital = Hospital()
@@ -69,12 +79,21 @@ if __name__ == '__main__':
         time_events.append([patient.arrival_time, waiting_patients.append, [patient]])
     time_events.sort(key=lambda x: x[0])
 
+    q.print_queue()
+
     while len(time_events) > 0 or len(waiting_patients) > 0:
 
         # Check time events
         if len(time_events) > 0:
-            event = time_events.pop()
-            event[1](*event[2])
+            event = time_events.pop(0)
+            if event[1] == discharge_patient:
+                discharged_patients.append(event[1](*event[2]))
+
+                print(f'evaluated discharge event: {event}', end='\n\n')
+            else:
+                event[1](*event[2])
+
+                print(f'evaluated time event: {event}')
 
         # Check status events
         while True:
@@ -84,6 +103,7 @@ if __name__ == '__main__':
                 try:
                     if eval(event):
                         i += 1
+                        print(f'evaluated status event: {event}')
                 except:
                     pass
 
@@ -92,5 +112,10 @@ if __name__ == '__main__':
         try:
             time_events.sort(key=lambda x: x[0])
             time = time_events[0][0]
+            print()
         except:
             pass
+
+    print()
+    for patient in discharged_patients:
+        print(patient.__str__())

@@ -1,4 +1,5 @@
 import numpy as np
+
 import uuid
 from medical_data import DISEASES
 import Patients

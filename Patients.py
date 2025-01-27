@@ -79,7 +79,13 @@ class Patient:
         return False
 
     def discharge(self, ward):
-        pass
+        try:
+            ward.patients.remove(self)
+            ward.capacity += 1
+        except:
+            return False
+        return True
+
 
 
     def __str__(self):
@@ -96,7 +102,7 @@ class Patient:
         )
 
 class Patients_Queue:
-    def __init__(self, mean_interval=10, num_patients=5):
+    def __init__(self, mean_interval=10):
         """
         Patients_Queue class is responsible for managing a queue of patients.
 
@@ -107,17 +113,11 @@ class Patients_Queue:
         """
         self.queue = []
         self.mean_interval = mean_interval  # Średni interwał czasu między przybyciem pacjentów
-        self.num_patients = num_patients  # Liczba pacjentów do wygenerowania
-        self.arrival_times = generate_patient_arrival_times(self.mean_interval,
-                                                            self.num_patients)  # Generowanie czasów przybycia pacjentów
 
     def add_patient(self, patient=None):
         if patient is None:
-            patient = Patient(Age_Generator(), random.choice(["male", "female"]))
+            patient = Patient(Age_Generator(), random.choice(["male", "female"]), arrival_time=generate_patient_arrival_times(self.mean_interval, 1)[0])
 
-        # Przypisanie wygenerowanego czasu przybycia do pacjenta
-        if len(self.queue) < len(self.arrival_times):  # Sprawdzamy, czy mamy więcej pacjentów do dodania
-            patient.arrival_time = self.arrival_times[len(self.queue)]  # Przypisujemy czas przybycia z listy
         self.queue.append(patient)
         self.queue[-1].assign_random_disease()
 
