@@ -3,12 +3,31 @@ import Patients
 from Parameters import QUEUE_LENGHT
 
 
-def diagnose_patient_from_waiting_patients(waiting_patients, time_events, time):
-    if waiting_patients[0].get_diagnosis(hospital.doctors):
-        patient = waiting_patients.pop()
+def assign_patient_to_ward(waiting_patients, hospital, time_events, time):
+    for doctor in hospital.doctors:
+        if doctor.available:
+            if waiting_patients[0].get_assign_to_ward(doctor):
+                patient = waiting_patients.pop(0)
+                time_events.append([time+patient.diagnosis_time, end_of_assignment_patient, [patient, hospital]])
+                return True
+    return False
 
-        # Appending time_events with end of diagnosis
-        time_events.append([time + patient.diagnosis_time, end_of_diagnosis, [hospital, patient]])
+def end_of_assignment_patient(patient, hospital):
+    patient.end_of_assignment(hospital)
+
+
+def diagnose_patient(hospital, time_events, time):
+    i = 0
+    for department, ward in hospital.wards.items():
+        try:
+            if ward.waiting_patients[0].get_diagnosis(ward.doctors_special):
+                patient = ward.waiting_patients.pop(0)
+                # Appending time_events with end of diagnosis
+                time_events.append([time + patient.diagnosis_time, end_of_diagnosis, [hospital, patient]])
+                i += 1
+        except:
+            pass
+    if i != 0:
         return True
     return False
 
@@ -27,7 +46,7 @@ def treat_patient(wards, time, time_events):
         for patient in ward.patients:
             if patient.diagnosis_result['details']['operation_time'] == None:
                 time_events.append([time + patient.diagnosis_result["details"]["hospitalization_time"], discharge_patient, [patient, ward]])
-            if patient.get_treatment(ward.doctors):
+            if patient.get_treatment(ward.doctors_special):
                 time_events.append([time + patient.diagnosis_result['details']['operation_time'], end_of_treatment,
                                     [patient, ward, time_events, time]])
                 i += 1
@@ -38,9 +57,9 @@ def treat_patient(wards, time, time_events):
 
 def end_of_treatment(patient, ward, time_events, time):
     ward.rooms['available'] += 1
-    for doctor in patient.doctors:
+    for doctor in patient.doctors_special:
         doctor.free()
-    patient.doctors = []
+    patient.doctors_special = []
     # if patient.disease['name'] == patient.diagnosis_result['name']:
     #     patient.hospitalization_time = time + patient.diagnosis_result["details"]["hospitalization_time"]
     #     time_events.append([patient.hospitalization_time, discharge_patient, [patient, ward]])
@@ -54,7 +73,8 @@ def discharge_patient(patient, ward):
 
 
 if __name__ == '__main__':
-    status_events = ['diagnose_patient_from_waiting_patients(waiting_patients, time_events, time)',
+    status_events = ['assign_patient_to_ward(waiting_patients, hospital, time_events, time)',
+                     'diagnose_patient(hospital, time_events, time)',
                      'treat_patient(hospital.wards, time, time_events)']
     time_events = []
     waiting_patients = []
@@ -117,5 +137,8 @@ if __name__ == '__main__':
             pass
 
     print()
-    for patient in discharged_patients:
-        print(patient.__str__())
+    try:
+        for patient in discharged_patients:
+            print(patient.__str__())
+    except:
+        print('No discharged patients')

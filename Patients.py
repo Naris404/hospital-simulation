@@ -1,11 +1,14 @@
 import random
+from sys import path_importer_cache
 
 from RandomGenerators import Age_Generator, generate_diagnosis_time, generate_patient_arrival_times
 from medical_data import DISEASES
 import uuid
 
+
 class Patient:
-    def __init__(self, age, gender, disease=None, diagnosis_result=None, hospital_days=0, survival_prob=1.0, arrival_time=0):
+    def __init__(self, age, gender, disease=None, diagnosis_result=None, hospital_days=0, survival_prob=1.0,
+                 arrival_time=0):
         self._id = uuid.uuid4()
         self._age = age
         self._gender = gender
@@ -14,7 +17,7 @@ class Patient:
         self.survival_prob = survival_prob
         self.diagnosis_result = diagnosis_result
         self.arrival_time = arrival_time
-        self.doctors = [] # Doctors assigned to the patient (diagnosing, treating, etc.)
+        self.doctors = []  # Doctors assigned to the patient (diagnosing, treating, etc.)
         if self.disease is None:
             self.assign_random_disease()
         self.diagnosis_time = self.generate_diagnosis_time()
@@ -59,7 +62,7 @@ class Patient:
 
     def get_treatment(self, ward):
         if ward.rooms['available'] > 0 and self.diagnosis_result['details']['operation_time'] != None:
-            for doctor in ward.doctors:
+            for doctor in ward.doctors_special:
                 if doctor.treat(self):
                     self.doctors.append(doctor)
                     ward.rooms['available'] -= 1
@@ -86,6 +89,18 @@ class Patient:
             return False
         return True
 
+    def get_assign_to_ward(self, doctor):
+        self.diagnosis_time = self.generate_diagnosis_time()
+        self.doctors.append(doctor)
+        doctor.occupied()
+
+    def end_of_assignment(self, hospital):
+        for department, ward in hospital.wards.items():
+            if self.disease['details']['department'] == department:
+                ward.waiting_patients.append(self)
+                for doctor in self.doctors:
+                    doctor.free()
+                self.doctors = []
 
 
     def __str__(self):
@@ -100,6 +115,7 @@ class Patient:
         return (
             f"Age: {self._age}, Gender: {self._gender}, Disease: {disease_info}, Diagnosis Result: {self.diagnosis_result}"
         )
+
 
 class Patients_Queue:
     def __init__(self, mean_interval=10):
@@ -116,7 +132,8 @@ class Patients_Queue:
 
     def add_patient(self, patient=None):
         if patient is None:
-            patient = Patient(Age_Generator(), random.choice(["male", "female"]), arrival_time=generate_patient_arrival_times(self.mean_interval, 1)[0])
+            patient = Patient(Age_Generator(), random.choice(["male", "female"]),
+                              arrival_time=generate_patient_arrival_times(self.mean_interval, 1)[0])
 
         self.queue.append(patient)
         self.queue[-1].assign_random_disease()
@@ -130,7 +147,7 @@ class Patients_Queue:
         except:
             return False
         return True
-    
+
     def print_queue(self):
         for patient in self.queue:
             print(patient.__str__())
@@ -143,7 +160,6 @@ class Patients_Queue:
     def sort(self):
         self.queue.sort(key=lambda x: x.arrival_time)
 
-
 # patients_queue = Patients_Queue(mean_interval=10, num_patients=5)
 #
 # patients_queue.print_queue()
@@ -151,4 +167,3 @@ class Patients_Queue:
 # patients_queue.fill_queue(5)
 #
 # patients_queue.print_queue()
-

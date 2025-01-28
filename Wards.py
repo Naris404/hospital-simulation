@@ -14,8 +14,9 @@ class Ward:
         self.speciality = speciality
         self.capacity = capacity
         self.patients = []
-        self.doctors = []
+        self.doctors_special = []
         self.rooms = {'rooms': capacity // 10, 'available': capacity // 10}
+        self.waiting_patients = []
 
     def add_patient(self, patient: Patients.Patient):
         """
@@ -41,7 +42,7 @@ class Ward:
             doctor (Doctors.Doctor): The doctor to add.
         """
         try:
-            self.doctors.append(doctor)
+            self.doctors_special.append(doctor)
         except:
             return False
         return True
@@ -60,7 +61,7 @@ class Ward:
             return False
         return True
 
-    def treatment(self, patient: Patients.Patient, current_time):
+    def treatment(self, patient: Patients.Patient):
         """
         Treats a patient with a doctor.
 
@@ -69,7 +70,7 @@ class Ward:
         """
         free_doctor = None
         free_room = None
-        for doctor in self.doctors:
+        for doctor in self.doctors_special:
             if doctor.available:
                 free_doctor = doctor
                 break
@@ -82,7 +83,6 @@ class Ward:
         if free_doctor != None and free_room != None:
             free_room.occupied()
             free_doctor.treat(patient)
-            free_room.end_of_treatment = current_time + patient.diagnosis_result['name']['details']['operation_time']
             return True
         else:
             return False
