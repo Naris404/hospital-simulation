@@ -17,8 +17,9 @@ class Patient:
         self.doctors = [] # Doctors assigned to the patient (diagnosing, treating, etc.)
         if self.disease is None:
             self.assign_random_disease()
-        self.diagnosis_time = self.generate_diagnosis_time()
+        self.diagnosis_time = None
         self.hospitalization_time = None
+        self.operation_time = None
 
     def assign_random_disease(self):
         diseases = list(DISEASES.keys())

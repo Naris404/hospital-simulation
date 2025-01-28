@@ -27,36 +27,6 @@ class Doctor:
             return True
         return False
 
-    def diagnose_patient(self, patient, diseases, scale_correct=0.8, scale_incorrect=2.0):
-        """
-        Diagnoses a patient using probabilities based on an exponential distribution.
-
-        Returns:
-            str: The diagnosed disease name.
-        """
-        if self.available:
-            self.occupied()
-            true_disease = patient.disease["name"]
-            department = patient.disease["details"]["department"]
-
-            relevant_diseases = {
-                d: diseases[d] for d in diseases if diseases[d]["department"] == department
-            }
-
-            disease_names = list(relevant_diseases.keys())
-            weights = [
-                np.random.exponential(scale_correct if d == true_disease else scale_incorrect)
-                for d in disease_names
-            ]
-
-            probabilities = [w / sum(weights) for w in weights]
-
-            diagnosed_disease = np.random.choice(disease_names, p=probabilities)
-
-            patient.update_diagnosis_result({"name": diagnosed_disease, "details": diseases[diagnosed_disease]})
-            return True
-        else:
-            return False
 
     def __str__(self):
         return f"ID: {self._id}, Specialization: {self.specialization}, Worktime: {self.worktime}, Available: {self.available}"

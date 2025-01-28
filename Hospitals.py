@@ -37,17 +37,18 @@ class Hospital:
 
         if assigned_ward_speciality:
             # Szukamy oddziału o odpowiedniej specjalizacji
-            for ward in self.wards:
+            for ward in self.wards.values():  # Iterujemy po wartościach słownika (obiektach Ward)
                 if ward.speciality == assigned_ward_speciality:
                     # Próbujemy dodać pacjenta do znalezionego oddziału
                     if ward.add_patient(patient):
-                        print(f"Patient assigned to {assigned_ward_speciality} ward.")
+                        print(f"Pacjent został przypisany do oddziału {assigned_ward_speciality}.")
                         return True
                     else:
-                        print(f"Failed to assign patient to {assigned_ward_speciality} ward, ward is full.")
+                        print(
+                            f"Nie udało się przypisać pacjenta do oddziału {assigned_ward_speciality} – oddział pełny.")
                         return False
         else:
-            print(f"Error: No ward found for disease {disease}.")
+            print(f"Błąd: Nie znaleziono oddziału dla choroby {disease}.")
             return False
 
     def init_hospital(self):

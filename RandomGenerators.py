@@ -71,4 +71,20 @@ def generate_diagnosis_time(disease_name: str):
     return np.random.exponential(mean_diagnosis_time)
 
 
+def generate_operation_time(mean_time: float):
+    import numpy as np
+    """
+    Generuje realistyczny czas operacji na podstawie rozkładu trójkątnego.
 
+    Args:
+        mean_time (float): Średni czas operacji (w godzinach).
+
+    Returns:
+        float: Wygenerowany czas operacji w godzinach.
+    """
+    if mean_time is None:
+        return None  # Choroba nie wymaga operacji
+
+    min_time = mean_time * 0.75  # Minimalny czas: 75% średniego czasu
+    max_time = mean_time * 1.25  # Maksymalny czas: 125% średniego czasu
+    return np.random.triangular(min_time, mean_time, max_time)
