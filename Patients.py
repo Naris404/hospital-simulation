@@ -1,7 +1,7 @@
 import random
 from sys import path_importer_cache
 
-from Tools.scripts.findnocoding import needs_declaration
+# from Tools.scripts.findnocoding import needs_declaration
 from numpy.f2py.cfuncs import needs
 
 from RandomGenerators import Age_Generator, generate_diagnosis_time, generate_patient_arrival_times
@@ -85,7 +85,7 @@ class Patient:
                                 self.survival_prob *= 1.2
                             # patient.survival_prob *= min(1, 1 + prob - np.random.normal(prob, 0.1))
                         else:
-                            self.survival_prob *= 0.8
+                            self.survival_prob *= 0.3
                         self.needs_treatment = False
                         return True
         return False

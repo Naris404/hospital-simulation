@@ -15,17 +15,35 @@ def end_of_diagnosis(hospital, patient):
     patient.doctors = []
 
 
-def end_of_treatment(patient, ward, time_events, time):
-    ward.rooms['available'] += 1
-    for doctor in patient.doctors:
-        doctor.free()
-    patient.doctors = []
-    # if patient.disease['name'] == patient.diagnosis_result['name']:
-    #     patient.hospitalization_time = time + patient.diagnosis_result["details"]["hospitalization_time"]
-    #     time_events.append([patient.hospitalization_time, discharge_patient, [patient, ward]])
-    patient.hospitalization_time = time + patient.diagnosis_result["details"]["hospitalization_time"]
-    time_events.append([patient.hospitalization_time, discharge_patient, [patient, ward]])
-    patient.to_get_discharge = True
+def end_of_treatment(patient, ward, time_events, time, waiting_patients):
+    if patient.to_get_discharge: # correct diagnosis, well recovered - discharge
+        if patient.diagnosis_result['details']['operation_time'] != None:
+            ward.rooms['available'] += 1
+            for doctor in patient.doctors:
+                doctor.free()
+            patient.doctors = []
+        patient.hospitalization_time = time + patient.diagnosis_result["details"]["hospitalization_time"]
+        time_events.append([patient.hospitalization_time, discharge_patient, [patient, ward]])
+    else: # patient didn't fully recover - incorrect diagnosis
+        time_events.append([time, waiting_patients.append, [patient]])
+
+
+def check_status(patient, ward, time_events, time, waiting_patients):
+    for doctor in ward.doctors_special:
+        if doctor.available:
+            patient.to_get_discharge = doctor.check_status(patient)
+            if patient.diagnosis_result['details']['operation_time'] == None:
+                a = patient.diagnosis_result['details']['hospitalization_time']
+            else:
+                a = patient.diagnosis_result['details']['operation_time']
+            time_events.append([time + a,
+                                    end_of_treatment,
+                                    [patient, ward, time_events, time, waiting_patients]])
+            return
+    time_events.append([time + 50, # wait for another doctor if everyone is occupied
+                            check_status,
+                            [patient, ward, time_events, time, waiting_patients]])
+
 
 
 def discharge_patient(patient, ward):

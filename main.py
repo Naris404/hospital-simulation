@@ -7,7 +7,7 @@ from TimeEvents import *
 if __name__ == '__main__':
     status_events = ['assign_patient_to_ward(waiting_patients, hospital, time_events, time)',
                      'diagnose_patient(hospital, time_events, time)',
-                     'treat_patient(hospital.wards, time, time_events)']
+                     'treat_patient(hospital.wards, time, time_events, waiting_patients)']
 
     time_events = []
     waiting_patients = []
@@ -35,7 +35,6 @@ if __name__ == '__main__':
     q.print_queue()
 
     while len(time_events) > 0 or len(waiting_patients) > 0:
-
         # Check time events
         if len(time_events) > 0:
             event = time_events.pop(0)
@@ -45,7 +44,6 @@ if __name__ == '__main__':
                 print(f'evaluated discharge event: {event}', end='\n\n')
             else:
                 event[1](*event[2])
-
                 print(f'evaluated time event: {event}')
 
         # Check status events
@@ -68,10 +66,8 @@ if __name__ == '__main__':
             print()
         except:
             pass
-
-    print()
     try:
         for patient in discharged_patients:
-            print(patient.__str__())
+            print(patient)
     except:
         print('No discharged patients')
