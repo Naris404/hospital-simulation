@@ -1,4 +1,2 @@
-
-
 QUEUE_LENGTH = 10
 N = 10

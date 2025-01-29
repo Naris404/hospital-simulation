@@ -2,7 +2,8 @@ import random
 from sys import path_importer_cache
 
 # from Tools.scripts.findnocoding import needs_declaration
-from numpy.f2py.cfuncs import needs
+# from numpy.f2py.cfuncs import needs
+import numpy as np
 
 from RandomGenerators import Age_Generator, generate_diagnosis_time, generate_patient_arrival_times, generate_operation_time
 from medical_data import DISEASES
@@ -29,12 +30,14 @@ class Patient:
         self.needs_treatment = False
         self.to_get_discharge = False
         self.disease["details"]["operation_time"] = self.generate_operation_time()
+        self.dead = False
 
     def assign_random_disease(self):
         diseases = list(DISEASES.keys())
         probabilities = [DISEASES[d]["probability"] for d in diseases]
 
         selected_disease = random.choices(diseases, probabilities, k=1)[0]
+        self.survival_prob = DISEASES[selected_disease]['probability']
         self.update_disease(selected_disease, DISEASES[selected_disease])
 
     def generate_diagnosis_time(self):
@@ -89,13 +92,16 @@ class Patient:
                         prob = DISEASES[self.disease['name']]['probability']
                         # change of survival probability based on the correctness of diagnosis
                         if self.diagnosis_result == self.disease['name']:
-                            if self.survival_prob * 1.2 >= 1:
+                            a = np.random.normal(self.survival_prob, self.survival_prob/100)
+                            if a >= 1:
                                 self.survival_prob = 1
+                            elif a < 0:
+                                self.survival_prob = 0
                             else:
-                                self.survival_prob *= 1.2
+                                self.survival_prob = a
                             # patient.survival_prob *= min(1, 1 + prob - np.random.normal(prob, 0.1))
                         else:
-                            self.survival_prob *= 0.3
+                            self.survival_prob = max(0, min(np.random.normal(self.survival_prob-(self.survival_prob*0.1), 0.2), self.survival_prob))
                         self.needs_treatment = False
                         return True
         return False
@@ -120,25 +126,12 @@ class Patient:
                 doctor.free()
             self.doctors = []
 
-    def update_survival_probability(self):
-        # Choose rate based on patient's time spent in hospital
-        if self.hospital_days > DISEASES[self.disease['name']]['hospitalization_time']:
-            a = 0.9
-        else:
-            a = 0.99
-        new_survival_prob = self.survival_prob * a
-        if new_survival_prob > 1:
-            self.survival_prob = 1
-        self.survival_prob = new_survival_prob
-        return True
-
-
     def __str__(self):
         disease_info = (
             f"{self.disease['name']} "
             f"(Diagnosis: {self.diagnosis_time} minutes, "
-            f"Operation: {self.disease['details']['operation_time']}h, "
-            f"Hospitalization: {self.disease['details']['hospitalization_time']}d), "
+            f"Operation: {self.disease['details']['mean_operation_time']} minutes, "
+            f"Hospitalization: {self.disease['details']['hospitalization_time']} minutes), "
             f"Arrival Time: {self.arrival_time} minutes "
             if self.disease else "None"
         )

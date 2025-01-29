@@ -22,8 +22,7 @@ def end_of_treatment(patient, ward, time_events, time, waiting_patients):
             for doctor in patient.doctors:
                 doctor.free()
             patient.doctors = []
-        patient.hospitalization_time = time + patient.diagnosis_result["details"]["hospitalization_time"]
-        time_events.append([patient.hospitalization_time, discharge_patient, [patient, ward]])
+        time_events.append([time+patient.diagnosis_result['details']['hospitalization_time'], discharge_patient, [patient, ward]])
     else: # patient didn't fully recover - incorrect diagnosis
         time_events.append([time, waiting_patients.append, [patient]])
 
@@ -38,7 +37,7 @@ def check_status(patient, ward, time_events, time, waiting_patients):
                 a = patient.diagnosis_result['details']['operation_time']
             time_events.append([time + a,
                                     end_of_treatment,
-                                    [patient, ward, time_events, time, waiting_patients]])
+                                    [patient, ward, time_events, time+a, waiting_patients]])
             return
     time_events.append([time + 50, # wait for another doctor if everyone is occupied
                             check_status,

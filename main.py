@@ -37,7 +37,6 @@ def simulation(queue_length):
     # q.print_queue()
 
     while len(time_events) > 0 or len(waiting_patients) > 0:
-
         # Check time events
         if len(time_events) > 0:
             event = time_events.pop(0)
@@ -72,24 +71,39 @@ def simulation(queue_length):
 
     # Collecting data
     hospitalization_time = []
+    dead_patients = []
 
     for time, patient in discharged_patients:
-        # print(patient.__str__())
-        hospitalization_time.append(time - patient.arrival_time)
-    return sum(hospitalization_time) / queue_length
+        # print(patient)
+        if not patient.dead:
+            hospitalization_time.append(time - patient.arrival_time)
+        else:
+            dead_patients.append(patient)
+    return sum(hospitalization_time) / queue_length, dead_patients
 
 
 def simulate_n_times(N, queue_length):
     avg_hospitalization_time = []
+    avg_dead_people = []
     for n in range(N):
-        avg_hospitalization_time.append(simulation(queue_length))
-    return avg_hospitalization_time
+        t, d = simulation(queue_length)
+        avg_hospitalization_time.append(t)
+        avg_dead_people.append(d)
+    return avg_hospitalization_time, avg_dead_people
 
 
 if __name__ == '__main__':
-    avg_hosp_time = simulate_n_times(N, QUEUE_LENGTH)
+    avg_hosp_time, avg_dead_people = simulate_n_times(N, QUEUE_LENGTH)
+    d = [len(a) for a in avg_dead_people]
     print(avg_hosp_time, sum(avg_hosp_time) / N)
+    print(f"Average dead people: {sum(d)/len(d)}")
 
     # plot average hospitalization time
-    plt.plot(avg_hosp_time)
+    a = [e/60 for e in avg_hosp_time]
+    ylabel = "Hours"
+    if max(a) > 100:
+        a = [e/24 for e in a]
+        ylabel = "Days"
+    plt.scatter(list(range(1,len(avg_hosp_time)+1)), a)
+    plt.ylabel(ylabel)
     plt.show()

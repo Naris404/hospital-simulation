@@ -75,12 +75,13 @@ class Doctor:
         return False
     
     def check_status(self, patient: Patients.Patient): # add it to status events connected to treatment event
-        # if patient.hospital_days > DISEASES[patient.disease['name']]['hospitalization_time'] or patient.survival_prob < DISEASES[patient.disease['name']]['probability']:
-        #     return patient.get_diagnosis([self]) # rediagnose patient, because he doesn't get better
-        # return True
-        if patient.diagnosis_result['name'] == patient.disease['name']:
-            return True
-        return False
+        if patient.survival_prob < 0.9* DISEASES[patient.disease['name']]['probability']:
+            if patient.survival_prob < 0.1:
+                patient.dead = True
+                return True # Classify as dead
+            patient.get_diagnosis([self]) # rediagnose patient, because he doesn't get better
+            return False
+        return True
 
 
     def __str__(self):
