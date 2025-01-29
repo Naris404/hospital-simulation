@@ -4,7 +4,7 @@ from sys import path_importer_cache
 # from Tools.scripts.findnocoding import needs_declaration
 from numpy.f2py.cfuncs import needs
 
-from RandomGenerators import Age_Generator, generate_diagnosis_time, generate_patient_arrival_times
+from RandomGenerators import Age_Generator, generate_diagnosis_time, generate_patient_arrival_times, generate_operation_time
 from medical_data import DISEASES
 import uuid
 
@@ -28,6 +28,7 @@ class Patient:
         self.operation_time = None
         self.needs_treatment = False
         self.to_get_discharge = False
+        self.disease["details"]["operation_time"] = self.generate_operation_time()
 
     def assign_random_disease(self):
         diseases = list(DISEASES.keys())
@@ -41,6 +42,15 @@ class Patient:
         Generates diagnosis time from external function.
         """
         return generate_diagnosis_time(self.disease['name'])
+
+    def generate_operation_time(self):
+        """
+        Generates operation time from external function based on the patient's disease.
+        """
+        mean_time = self.disease['details']['mean_operation_time']
+        if mean_time is None:
+            return None
+        return generate_operation_time(mean_time)
 
     def update_disease(self, disease_name, disease_details):
         try:

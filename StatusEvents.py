@@ -1,8 +1,4 @@
 from TimeEvents import *
-from Patients import Patient
-from Hospitals import Hospital
-from Doctors import Doctor
-from Wards import Ward
 
 
 def assign_patient_to_ward(waiting_patients, hospital, time_events, time):

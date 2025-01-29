@@ -1,3 +1,4 @@
 
 
-QUEUE_LENGHT = 10
+QUEUE_LENGTH = 10
+N = 10
