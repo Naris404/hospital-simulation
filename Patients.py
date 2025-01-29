@@ -110,6 +110,18 @@ class Patient:
                 doctor.free()
             self.doctors = []
 
+    def update_survival_probability(self):
+        # Choose rate based on patient's time spent in hospital
+        if self.hospital_days > DISEASES[self.disease['name']]['hospitalization_time']:
+            a = 0.9
+        else:
+            a = 0.99
+        new_survival_prob = self.survival_prob * a
+        if new_survival_prob > 1:
+            self.survival_prob = 1
+        self.survival_prob = new_survival_prob
+        return True
+
 
     def __str__(self):
         disease_info = (

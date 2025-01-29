@@ -88,3 +88,14 @@ def generate_operation_time(mean_time: float):
     min_time = mean_time * 0.75  # Minimalny czas: 75% średniego czasu
     max_time = mean_time * 1.25  # Maksymalny czas: 125% średniego czasu
     return np.random.triangular(min_time, mean_time, max_time)
+
+
+def generate_time_normal(mean_time: float, sd = 1):
+    import numpy as np
+    time = np.random.normal(mean_time, sd)
+    # Bounds beacause normal distribution goes from negative inf to positive inf
+    if time <= mean_time/2:
+        time = mean_time/2
+    elif time >= mean_time*2:
+        time = mean_time*2
+    return time

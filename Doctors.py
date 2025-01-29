@@ -55,6 +55,10 @@ class Doctor:
             self.occupied()
             return True
         return False
+    
+    def check_status(self, patient: Patients.Patient): # add it to status events connected to treatment event
+        if patient.hospital_days > DISEASES[patient.disease['name']]['hospitalization_time']:
+            patient.get_diagnosis() # rediagnose patient, because he doesn't get better
 
 
     def __str__(self):
