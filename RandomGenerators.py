@@ -99,3 +99,22 @@ def generate_time_normal(mean_time: float, sd = 1):
     elif time >= mean_time*2:
         time = mean_time*2
     return time
+
+import numpy as np
+
+def generate_hospitalization_time(mean_time: float):
+    """
+    Generuje realistyczny czas hospitalizacji na podstawie rozkładu gamma.
+
+    Args:
+        mean_time (float): Średni czas hospitalizacji w minutach.
+
+    Returns:
+        float: Wygenerowany czas hospitalizacji w minutach.
+    """
+    if mean_time is None:
+        return None
+
+    shape = 2
+    scale = mean_time / shape
+    return max(0, np.random.gamma(shape, scale))

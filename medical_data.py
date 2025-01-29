@@ -7,25 +7,22 @@ DISEASES = {
     "heart_attack": {
         "department": "Cardiology",
         "mean_diagnosis_time": 45,
-        "mean_operation_time": generate_time_normal(6),
-        "operation_time": generate_operation_time(6),  # Generowanie czasu operacji
-        "hospitalization_time": generate_time_normal(7),
+        "mean_operation_time": 360,
+        "hospitalization_time": 10080,
         "probability": 0.25
     },
     "arrhythmia": {
         "department": "Cardiology",
         "mean_diagnosis_time": 30,
-        "mean_operation_time": generate_time_normal(4),
-        "operation_time": generate_operation_time(4),
-        "hospitalization_time": generate_time_normal(5),
+        "mean_operation_time": 240,
+        "hospitalization_time": 7200,
         "probability": 0.15
     },
     "angina": {
         "department": "Cardiology",
         "mean_diagnosis_time": 40,
         "mean_operation_time": None,
-        "operation_time": None,  # Brak operacji
-        "hospitalization_time": generate_time_normal(3),
+        "hospitalization_time": 4320,
         "probability": 0.2
     },
     # Neurology
@@ -33,36 +30,33 @@ DISEASES = {
         "department": "Neurology",
         "mean_diagnosis_time": 60,
         "mean_operation_time": None,
-        "operation_time": None,  # Brak operacji
-        "hospitalization_time": generate_time_normal(10),
+        "hospitalization_time": 14400,
         "probability": 0.3
     },
     "brain_tumor": {
         "department": "Neurology",
         "mean_diagnosis_time": 120,
-        "mean_operation_time": generate_time_normal(10),
-        "operation_time": generate_operation_time(10),
-        "hospitalization_time": generate_time_normal(14),
+        "mean_operation_time": 600,
+        "hospitalization_time": 20160,
         "probability": 0.1
     },
     # Orthopedics
     "fracture": {
         "department": "Orthopedics",
         "mean_diagnosis_time": 30,
-        "mean_operation_time": generate_time_normal(2),
-        "operation_time": generate_operation_time(2),
-        "hospitalization_time": generate_time_normal(5),
+        "mean_operation_time": 120,
+        "hospitalization_time": 7200,
         "probability": 0.25
     },
     "joint_replacement": {
         "department": "Orthopedics",
         "mean_diagnosis_time": 40,
-        "mean_operation_time": generate_time_normal(3),
-        "operation_time": generate_operation_time(3),
-        "hospitalization_time": generate_time_normal(7),
+        "mean_operation_time": 180,
+        "hospitalization_time": 10080,
         "probability": 0.2
     }
 }
+
 
 
 DEPARTMENTS = ["Cardiology", "Neurology", "Orthopedics"]
