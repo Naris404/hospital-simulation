@@ -41,11 +41,7 @@ class Ward:
         Args:
             doctor (Doctors.Doctor): The doctor to add.
         """
-        try:
-            self.doctors_special.append(doctor)
-        except:
-            return False
-        return True
+        self.doctors_special.append(doctor)
 
     def remove_patient(self, patient: Patients.Patient):
         """

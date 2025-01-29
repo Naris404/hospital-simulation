@@ -60,7 +60,7 @@ class Hospital:
         # Adding doctors
         for department, ward in self.wards.items():
             for _ in range(random.randint(5, 10)):
-                ward.add_doctor(Doctors.Doctor(ward.speciality, 8))
+                ward.add_doctor(Doctors.Doctor(department, 8))
 
         for _ in range(random.randint(10, 20)):
             self.doctors.append(Doctors.Doctor("all", 8))
