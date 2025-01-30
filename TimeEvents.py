@@ -16,33 +16,16 @@ def end_of_diagnosis(hospital, patient):
 
 
 def end_of_treatment(patient, ward, time_events, time, waiting_patients):
+    patient.to_get_discharge = patient.doctors[0].check_status(patient)
+    ward.rooms['available'] += 1
+    for doctor in patient.doctors:
+        doctor.free()
+    patient.doctors = []
     if patient.to_get_discharge: # correct diagnosis, well recovered - discharge
-        if patient.diagnosis_result['details']['operation_time'] != None:
-            ward.rooms['available'] += 1
-            for doctor in patient.doctors:
-                doctor.free()
-            patient.doctors = []
         time_events.append([time+patient.diagnosis_result['details']['hospitalization_time'], discharge_patient, [patient, ward]])
     else: # patient didn't fully recover - incorrect diagnosis
-        time_events.append([time, waiting_patients.append, [patient]])
-
-
-def check_status(patient, ward, time_events, time, waiting_patients):
-    for doctor in ward.doctors_special:
-        if doctor.available:
-            patient.to_get_discharge = doctor.check_status(patient)
-            if patient.diagnosis_result['details']['operation_time'] == None:
-                a = patient.diagnosis_result['details']['hospitalization_time']
-            else:
-                a = patient.diagnosis_result['details']['operation_time']
-            time_events.append([time + a,
-                                    end_of_treatment,
-                                    [patient, ward, time_events, time+a, waiting_patients]])
-            return
-    time_events.append([time + 50, # wait for another doctor if everyone is occupied
-                            check_status,
-                            [patient, ward, time_events, time, waiting_patients]])
-
+        ward.patients.remove(patient)
+        time_events.append([time, ward.waiting_patients.append, [patient]])
 
 
 def discharge_patient(patient, ward):

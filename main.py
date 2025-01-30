@@ -95,7 +95,8 @@ def simulate_n_times(N, queue_length):
 if __name__ == '__main__':
     avg_hosp_time, avg_dead_people = simulate_n_times(N, QUEUE_LENGTH)
     d = [len(a) for a in avg_dead_people]
-    print(avg_hosp_time, sum(avg_hosp_time) / N)
+    avg_hosp_time = [e/60 for e in avg_hosp_time]
+    print(f"Average hospitalization time: {sum(avg_hosp_time)/N} hours")
     print(f"Average dead people: {sum(d)/len(d)}")
 
     # plot average hospitalization time

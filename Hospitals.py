@@ -4,7 +4,7 @@ import Doctors
 import Wards
 import Patients
 from medical_data import DISEASES, DEPARTMENTS
-
+from Parameters import NUM_DOCTORS
 
 class Hospital:
     def __init__(self):
@@ -59,8 +59,8 @@ class Hospital:
 
         # Adding doctors
         for department, ward in self.wards.items():
-            for _ in range(random.randint(5, 10)):
+            for _ in range(NUM_DOCTORS()):
                 ward.add_doctor(Doctors.Doctor(department, 8))
 
-        for _ in range(random.randint(10, 20)):
+        for _ in range(NUM_DOCTORS() * 2):
             self.doctors.append(Doctors.Doctor("all", 8))

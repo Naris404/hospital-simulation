@@ -42,8 +42,8 @@ def treat_patient(wards, time, time_events, waiting_patients):
                 i = True
             elif patient.get_treatment(ward):
                 time_events.append([time + patient.diagnosis_result['details']['operation_time'],
-                                    check_status,
-                                    [patient, ward, time_events, time, waiting_patients]])
+                                    end_of_treatment,
+                                    [patient, ward, time_events, time+patient.diagnosis_result['details']['operation_time'], waiting_patients]])
                 i = True
     if i:
         return True

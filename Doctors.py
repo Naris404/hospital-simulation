@@ -79,7 +79,6 @@ class Doctor:
             if patient.survival_prob < 0.1:
                 patient.dead = True
                 return True # Classify as dead
-            patient.get_diagnosis([self]) # rediagnose patient, because he doesn't get better
             return False
         return True
 
