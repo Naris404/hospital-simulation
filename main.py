@@ -36,7 +36,7 @@ def simulation(queue_length):
 
     # q.print_queue()
 
-    while len(time_events) > 0 or len(waiting_patients) > 0:
+    while len(time_events) > 0 or len(waiting_patients) > 0 or any(ward.waiting_patients for ward in hospital.wards.values()) or any(ward.patients for ward in hospital.wards.values()):
         # Check time events
         if len(time_events) > 0:
             event = time_events.pop(0)
@@ -79,6 +79,7 @@ def simulation(queue_length):
             hospitalization_time.append(time - patient.arrival_time)
         else:
             dead_patients.append(patient)
+    print(len(discharged_patients))
     return sum(hospitalization_time) / queue_length, dead_patients
 
 
@@ -105,8 +106,12 @@ if __name__ == '__main__':
     if max(a) > 100:
         a = [e/24 for e in a]
         ylabel = "Days"
-    plt.scatter(list(range(1,len(avg_hosp_time)+1)), a)
-    plt.ylabel(ylabel)
-    plt.xlabel("Number of patients")
-    plt.title("Average hospitalization time")
-    plt.show()
+    # plt.scatter(list(range(1,len(avg_hosp_time)+1)), a)
+    # plt.ylabel(ylabel)
+    # plt.xlabel("Number of patients")
+    # plt.title("Average hospitalization time")
+    # plt.show()
+
+    plt.hist(a, bins=10, edgecolor='black')
+    plt.xlabel(ylabel)
+    #plt.show()

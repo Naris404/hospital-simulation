@@ -55,7 +55,7 @@ class Hospital:
 
         # Adding wards
         for department in DEPARTMENTS:
-            self.add_ward(department, ward=Wards.Ward(speciality=department, capacity=random.randint(30, 50)))
+            self.add_ward(department, ward=Wards.Ward(speciality=department, capacity=random.randint(10, 20)))
 
         # Adding doctors
         for department, ward in self.wards.items():

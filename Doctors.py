@@ -73,15 +73,14 @@ class Doctor:
             self.occupied()
             return True
         return False
-    
-    def check_status(self, patient: Patients.Patient): # add it to status events connected to treatment event
-        if patient.survival_prob < 0.9* DISEASES[patient.disease['name']]['probability']:
+
+    def check_status(self, patient: Patients.Patient):  # add it to status events connected to treatment event
+        if patient.survival_prob < 0.9 * DISEASES[patient.disease['name']]['probability']:
             if patient.survival_prob < 0.1:
                 patient.dead = True
-                return True # Classify as dead
+                return True  # Classify as dead
             return False
         return True
-
 
     def __str__(self):
         return f"ID: {self._id}, Specialization: {self.specialization}, Worktime: {self.worktime}, Available: {self.available}"

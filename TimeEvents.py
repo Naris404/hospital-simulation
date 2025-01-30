@@ -15,16 +15,20 @@ def end_of_diagnosis(hospital, patient):
     patient.doctors = []
 
 
-def end_of_treatment(patient, ward, time_events, time, waiting_patients):
+def end_of_treatment(patient, ward, time_events, time):
     patient.to_get_discharge = patient.doctors[0].check_status(patient)
     ward.rooms['available'] += 1
     for doctor in patient.doctors:
         doctor.free()
     patient.doctors = []
     if patient.to_get_discharge: # correct diagnosis, well recovered - discharge
+        if patient.dead:
+            time_events.append([time, discharge_patient, [patient, ward]])
+            return
         time_events.append([time+patient.diagnosis_result['details']['hospitalization_time'], discharge_patient, [patient, ward]])
     else: # patient didn't fully recover - incorrect diagnosis
         ward.patients.remove(patient)
+        ward.capacity += 1
         time_events.append([time, ward.waiting_patients.append, [patient]])
 
 

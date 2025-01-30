@@ -91,7 +91,7 @@ class Patient:
                         ward.rooms['available'] -= 1
                         prob = DISEASES[self.disease['name']]['probability']
                         # change of survival probability based on the correctness of diagnosis
-                        if self.diagnosis_result == self.disease['name']:
+                        if self.diagnosis_result['name'] == self.disease['name']:
                             a = np.random.normal(self.survival_prob, self.survival_prob/100)
                             if a >= 1:
                                 self.survival_prob = 1
