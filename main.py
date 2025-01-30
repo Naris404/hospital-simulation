@@ -107,4 +107,6 @@ if __name__ == '__main__':
         ylabel = "Days"
     plt.scatter(list(range(1,len(avg_hosp_time)+1)), a)
     plt.ylabel(ylabel)
+    plt.xlabel("Number of patients")
+    plt.title("Average hospitalization time")
     plt.show()

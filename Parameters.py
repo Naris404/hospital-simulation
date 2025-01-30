@@ -1,5 +1,5 @@
 import random
 
-QUEUE_LENGTH = 50
-N = 100
+QUEUE_LENGTH = 100
+N = 200
 NUM_DOCTORS = lambda: random.randint(5, 10)
